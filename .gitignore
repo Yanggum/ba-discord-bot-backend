@@ -1,0 +1,15 @@
+/.env
+/sqls/New Student.sql
+/hs_err_pid41404.log
+/ngrok.exe
+.idea/vcs.xml
+apps/__pycache__/__init__.cpython-310.pyc
+apps/__pycache__/database.cpython-310.pyc
+apps/__pycache__/main.cpython-310.pyc
+apps/chat/__pycache__/__init__.cpython-310.pyc
+apps/chat/__pycache__/model.cpython-310.pyc
+apps/chat/__pycache__/models.cpython-310.pyc
+apps/chat/__pycache__/router.cpython-310.pyc
+apps/chat/__pycache__/schema.cpython-310.pyc
+apps/common/__pycache__/__init__.cpython-310.pyc
+apps/common/__pycache__/kogpt.cpython-310.pyc
