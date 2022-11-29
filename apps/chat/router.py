@@ -30,75 +30,6 @@ def get_db_conn(request: Request):
     return request.state.db_conn  # middleware 에서 삽입해준 db_conn
 
 
-@chat_router.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
-
-
-@chat_router.get("/chat")
-async def chat(
-        db: Database = Depends(get_db_conn)
-):
-    # TODO : 채팅 데이터를 받아오게끔 수정해야함
-    query = insert(CcCharChat).values(
-        CHAT_ROOM_NO=1,
-        CHAR_NO=2,
-        CHAT_CONT="안녕!",
-    )
-
-    await db.execute(query)
-
-    # db.
-
-    # await db.execute(sensei_insert)
-    #
-    saori_result_query = select(CcChar).where(CcChar.CHAR_NO == 1)
-    sensei_result_query = select(CcChar).where(CcChar.CHAR_NO == 2)
-    messages_result_query = select(CcCharChat).filter(CcCharChat.CHAT_ROOM_NO == 1)
-    saori_result = await db.fetch_one(saori_result_query)
-    sensei_result = await db.fetch_one(sensei_result_query)
-    messages_result = await db.fetch_all(messages_result_query)
-
-    messages = []
-
-    for message in messages_result:
-        if message["CHAR_NO"] == saori_result["CHAR_NO"]:
-            messages.append(saori_result["CHAR_NAME"] + ":" + message["CHAT_CONT"])
-        if message["CHAR_NO"] == sensei_result["CHAR_NO"]:
-            messages.append(sensei_result["CHAR_NAME"] + ":" + message["CHAT_CONT"])
-
-    messages.append(saori_result.CHAR_NAME + ":")
-
-    prompt = saori_result.CHAR_INFO
-
-    for message in messages:
-        if message != saori_result.CHAR_NAME + ":":
-            prompt += message + "\n"
-        else:
-            prompt += message
-
-    result = generate_text(prompt, 128)  # run_kogpt(prompt, 64)
-    # result = json.loads(result)["result"]
-    origin_result = result
-
-    refined_result = result.split(prompt)[len(result.split(prompt)) - 1]
-    refined_result = refined_result.split(saori_result.CHAR_NAME + ":")[0]
-    refined_result = refined_result.split("\n")[0]
-
-    query = insert(CcCharChat).values(
-        CHAT_ROOM_NO=1,
-        CHAR_NO=1,
-        CHAT_CONT=refined_result,
-    )
-
-    await db.execute(query)
-
-    return {
-        "message": refined_result,
-        "original": origin_result
-    }
-
-
 @chat_router.post("/chat/reset")
 async def chat_reset_post(
         db: Database = Depends(get_db_conn)
@@ -271,7 +202,6 @@ async def chat_post(
             # result = run_kogpt2(prompt)[0]['generated_text']
             # origin_result = result
 
-
             refined_result = result.split(prompt)[len(result.split(prompt)) - 1]
 
             if refined_result.__contains__(":"):
@@ -302,8 +232,8 @@ async def chat_post(
                         if len(origin_result.split(sensei_result["CHAR_NAME"] + ":" + req.chatCont)[1].split(
                                 saori_result["CHAR_NAME"] + ":")[1].split("\n")) >= 2:
                             refined_result = \
-                            origin_result.split(sensei_result["CHAR_NAME"] + ":" + req.chatCont)[1].split(
-                                saori_result["CHAR_NAME"] + ":")[1].split("\n")[0]
+                                origin_result.split(sensei_result["CHAR_NAME"] + ":" + req.chatCont)[1].split(
+                                    saori_result["CHAR_NAME"] + ":")[1].split("\n")[0]
 
                 if refined_result.__contains__("<|endoftext|>"):
                     refined_result = refined_result.split("<|endoftext|>")[0]
