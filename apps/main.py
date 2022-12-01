@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from apps.chat.router import chat_router
 from apps.database import db_instance
 
-
 app = FastAPI()
+
 
 # 서버 시작시 db connect
 @app.on_event("startup")

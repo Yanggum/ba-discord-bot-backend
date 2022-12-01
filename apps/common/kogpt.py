@@ -55,17 +55,17 @@ def polyglot_ko_api(prompt, max_tokens=32):
         return run_kogpt(prompt, max_tokens)
 
 
-def run_gpt3(prompt, max_tokens):
+def run_gpt3(prompt, max_tokens, options):
     openai.api_key = environ["OPENAI_API_KEY"]
 
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=prompt,
-        temperature=0.5,
+        temperature=options["temperature"],
         max_tokens=256,
         top_p=1,
-        frequency_penalty=0.5,
-        presence_penalty=0
+        frequency_penalty=options["frequency_penalty"],
+        presence_penalty=options["presence_penalty"],
     )
 
     return response.choices[0].text

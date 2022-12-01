@@ -8,6 +8,8 @@ import datetime
 from os import environ
 from dotenv import load_dotenv
 
+load_dotenv()
+
 
 # 5분마다 기초데이터 채우기 로직
 async def reset():
@@ -27,7 +29,7 @@ async def reset():
     if result != 0:
         print("기초 데이터 채우기 실패")
 
-    await asyncio.sleep(60*10)
+    await asyncio.sleep(60 * 10)
     # * 5)
 
 

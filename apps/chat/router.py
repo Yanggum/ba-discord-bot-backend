@@ -10,7 +10,7 @@ from sqlalchemy import select, delete
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.orm import Session
 
-from apps.chat.models import CcCharChat, CcChar, CcCharChatForLearn, CcCharChatLog
+from apps.chat.models import CcCharChat, CcChar, CcCharChatLog
 from apps.chat.schema import ChatCreate
 # Memo 모델
 from apps.chat.model import ChatModel, db_engine
@@ -96,7 +96,8 @@ async def chat_load_student_post(
                 "role": student.STD_ROLE,
                 "error_msg": student.STD_ERROR_MSG,
                 "short_name": student.CHAR_NAME,
-                "status": student.STD_STATUS
+                "status": student.STD_STATUS,
+                "thumbnail": student.THUMBNAIL,
             })
 
         return result_list
@@ -185,8 +186,14 @@ async def chat_post(
     # 로컬
     # result = generate_text(prompt, 64)
 
+    options = {
+        "temperature": float(saori_result["TEMPERATURE"]),
+        "frequency_penalty": float(saori_result["F_PENALTY"]),
+        "presence_penalty": float(saori_result["P_PENALTY"]),
+    }
+
     try:
-        result = run_gpt3(prompt, 64)
+        result = run_gpt3(prompt, 64, options)
         origin_result = result
         refined_result = result
 

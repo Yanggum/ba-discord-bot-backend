@@ -6,7 +6,7 @@ from os import environ
 
 load_dotenv()
 
-url = environ['DB_CONN_URL']
+url = environ['DB_FULL_URL']
 engine = create_engine(url)
 metadata = MetaData(engine)
 metadata.reflect(engine)
