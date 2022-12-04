@@ -63,7 +63,7 @@ def run_gpt3(prompt, max_tokens, options):
         prompt=prompt,
         temperature=options["temperature"],
         max_tokens=256,
-        top_p=1,
+        top_p=1.0,
         frequency_penalty=options["frequency_penalty"],
         presence_penalty=options["presence_penalty"],
     )
